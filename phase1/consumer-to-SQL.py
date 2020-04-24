@@ -1,6 +1,10 @@
+import statistics
+from statistics import mean
+
 from kafka import KafkaConsumer, TopicPartition, conn
 from json import loads
 from sqlalchemy import create_engine
+import pymysql
 
 
 class XactionConsumer:
@@ -19,8 +23,8 @@ class XactionConsumer:
         # data gets lost!
         # add a way to connect to your database here.
 
-        self.mysql_engine = create_engine('mysql+pymysql://root:zipcoder@localhost/kafka')
-        self.conn = self.mysql_engine.connect()
+        self.mySql_engine = create_engine('mysql+pymysql://root:zipcoder@localhost/kafka')
+        self.conn = self.mySql_engine.connect()
         # Go back to the readme.
 
     def handleMessages(self):
@@ -30,6 +34,9 @@ class XactionConsumer:
             self.ledger[message['custid']] = message
             ch_message = list(message.values())
             new_values = tuple(ch_message)
+            # self.conn.execute("DROP TABLE IF EXISTS transaction;")
+            # self.conn.execute("CREATE TABLE transaction(custid Integer not null,type varchar(250) not null,date int,"
+            #                   "amt int);")
             self.conn.execute("INSERT INTO transaction VALUES (%s,%s,%s,%s)", new_values)
 
             if message['custid'] not in self.custBalances:
@@ -41,6 +48,43 @@ class XactionConsumer:
             print(self.custBalances)
 
 
+def drop_tbl_transaction():
+    mysql_engine = create_engine('mysql+pymysql://root:zipcoder@localhost/kafka')
+    # cur = mysql_engine.cursor()
+    # cur.execute("""
+    con = mysql_engine.connect()
+    con.execute("""
+        DROP TABLE IF EXISTS transaction;
+    #     CREATE TABLE transaction(
+    #             custid Integer not null,
+    #             type varchar(250) not null,
+    #             date int,
+    #             amt int);
+    # """)
+    #CREATE TABLE transaction(custid Integer not null,type varchar(250) not null,date int,amt int);
+    # conn = psycopg2.connect("host=localhost dbname=airflow_test user=postgres")
+    # cur = conn.cursor()
+    # cur.execute("""
+    # conn.commit()
+
+
+def create_tbl_transaction():
+    mysql_engine = create_engine('mysql+pymysql://root:zipcoder@localhost/kafka')
+    # cur = mysql_engine.cursor()
+    # cur.execute("""
+    con = mysql_engine.connect()
+    con.execute("""
+        #DROP TABLE IF EXISTS transaction;
+        CREATE TABLE transaction(
+                custid Integer not null,
+                type varchar(250) not null,
+                date int,
+                amt int);
+    """)
+
+
 if __name__ == "__main__":
+    drop_tbl_transaction()
+    create_tbl_transaction()
     c = XactionConsumer()
     c.handleMessages()
