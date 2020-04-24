@@ -30,7 +30,7 @@ class XactionConsumer:
                 self.custBalances[message['custid']] -= message['amt']
             for key, value in self.custBalances.items():
                 if value > self.limit or value == self.limit:
-                    print(" current balances greater or equal to the limit of -5000:")
+                    print("Current balances are greater or equal to the limit of -5000:")
                     print(key, value)
 
 
