@@ -15,30 +15,28 @@ class XactionConsumer:
         # custBalances is the one where the current blance of each customer
         # account is kept.
         self.custBalances = {}
+
         self.limit = -5000
 
     def handleMessages(self):
         for message in self.consumer:
             message = message.value
-            print('{} received'.format(message))
+            #
             self.ledger[message['custid']] = message
 
             if message['custid'] not in self.custBalances:
                 self.custBalances[message['custid']] = 0
             if message['type'] == 'dep':
                 self.custBalances[message['custid']] += message['amt']
-            if message['type'] == 'wth' and self.custBalances < self.limit:
-                print(message['custid'], message['amt'])
             else:
                 self.custBalances[message['custid']] -= message['amt']
-            print(self.custBalances)
-"""
+            for key, value in self.custBalances.items():
+                if value > self.limit or value == self.limit:
+                    print(" current balances greater or equal to the limit of -5000:")
+                    print(key, value)
 
-LimitConsumer
 
-LimitConsumer should keep track of the customer ids that have current balances greater or equal to -5000 
-to the constructor. The intro suggests -5000 for eaxmple, but you should be able set that with a parameter to the 
-class' Constructor """
+
 
 if __name__ == "__main__":
     c = XactionConsumer()
