@@ -32,7 +32,13 @@ class XactionConsumer:
             else:
                 self.custBalances[message['custid']] -= message['amt']
             print(self.custBalances)
+"""
 
+LimitConsumer
+
+LimitConsumer should keep track of the customer ids that have current balances greater or equal to -5000 
+to the constructor. The intro suggests -5000 for eaxmple, but you should be able set that with a parameter to the 
+class' Constructor """
 
 if __name__ == "__main__":
     c = XactionConsumer()
