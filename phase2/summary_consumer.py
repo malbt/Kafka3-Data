@@ -1,9 +1,6 @@
 import statistics
-from statistics import mean
-
 from kafka import KafkaConsumer, TopicPartition, conn
 from json import loads
-from sqlalchemy import create_engine
 
 
 class XactionConsumer:

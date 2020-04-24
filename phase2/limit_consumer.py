@@ -1,6 +1,5 @@
 from kafka import KafkaConsumer, TopicPartition, conn
 from json import loads
-from sqlalchemy import create_engine
 
 
 class XactionConsumer:
@@ -15,7 +14,6 @@ class XactionConsumer:
         # custBalances is the one where the current blance of each customer
         # account is kept.
         self.custBalances = {}
-
         self.limit = -5000
 
     def handleMessages(self):
@@ -34,8 +32,6 @@ class XactionConsumer:
                 if value > self.limit or value == self.limit:
                     print(" current balances greater or equal to the limit of -5000:")
                     print(key, value)
-
-
 
 
 if __name__ == "__main__":
