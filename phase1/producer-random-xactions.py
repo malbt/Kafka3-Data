@@ -26,21 +26,9 @@ class Producer:
     def generateRandomXactions(self, n=1000):
         for _ in range(n):
             data = self.emit()
-            # av = self.average()
-            # dev = self.dev()
             print('sent', data)
             self.producer.send('bank-customer-events', value=data)
-            #self.producer.send(value=av)
-            #self.producer.send(value=dev)
             sleep(1)
-
-    # def average(self, any_list):
-    #     av = mean(any_list)
-    #     return av
-    #
-    # def dev(self, in_list=None):
-    #     dev = statistics.pstdev(in_list)
-    #     return dev
 
 
 if __name__ == "__main__":
